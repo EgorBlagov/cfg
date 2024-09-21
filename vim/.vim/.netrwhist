@@ -1,0 +1,12 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =2
+let g:netrw_dirhist_2='/Users/e.blagov/Desktop/bds/envs'
+let g:netrw_dirhist_1='/Users/e.blagov/Desktop/bds'
+let g:netrw_dirhist_0='/Users/e.blagov/Desktop'
+let g:netrw_dirhist_9='/Users/e.blagov'
+let g:netrw_dirhist_8='/Users/e.blagov/Desktop/bds/dialog_platform'
+let g:netrw_dirhist_7='/Users/e.blagov/Desktop/anyio/.tox'
+let g:netrw_dirhist_6='/Users/e.blagov/Desktop/nlp/cache/mlc-airflow-markup/.venv/lib/python3.9/site-packages/airflow_exporter-1.5.3.dist-info'
+let g:netrw_dirhist_5='/Users/e.blagov/Desktop/nlp/cache/airflow/client/results/cli__e.blagov__2023-11-20T10:32:44.860874+00:00'
+let g:netrw_dirhist_4='/Users/e.blagov/Desktop/nlp/cache/mlc-airflow-markup/venv'
+let g:netrw_dirhist_3='/Users/e.blagov/Desktop/nlp/cache/mlc-airflow-markup/venv/lib'

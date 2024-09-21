@@ -1,0 +1,9 @@
+img {
+      width: 600px;
+    height: auto;
+}
+
+iframe[id^=youtube-player] {
+      width: 600px;
+    height: auto;
+}
