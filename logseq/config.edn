@@ -217,7 +217,7 @@
  {:journals
   [
 
-{:title [:marquee "🚨 Deadline within 2 days 🚨"]
+{:title [:marquee "🚨 Deadline within 3 days 🚨"]
   :query [:find (pull ?b [*])
           :in $ ?today ?next
           :where
@@ -226,7 +226,7 @@
           [?b :block/deadline ?day]
           [(>= ?day ?today)]
           [(<= ?day ?next)]]
-  :inputs [:today :+2d]
+  :inputs [:today :+3d]
   :group-by-page? false
   :result-transform :sort-by-deadline-and-priority
   :collapsed? false}
@@ -240,7 +240,7 @@
           [?b :block/deadline ?day]
           [(>= ?day ?today)]
           [(<= ?day ?next)]]
-  :inputs [:today :+14d]
+  :inputs [:+4d :+14d]
   :group-by-page? false
   :result-transform :sort-by-deadline-and-priority
   :collapsed? false}
