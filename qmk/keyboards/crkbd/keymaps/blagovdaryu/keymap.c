@@ -49,6 +49,7 @@ enum layers {
     _OSM_MOUSE_NAV,
     _SYM,
     _MEDIA,
+    _NUMPAD,
 };
 
 #define LAYER_SPC LT(_OSM_MOUSE_NAV, KC_SPC)
@@ -100,9 +101,16 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 #endif
 
 #ifdef OLED_ENABLE
+oled_rotation_t oled_init_user(oled_rotation_t rotation) {
+    return OLED_ROTATION_270;
+}
+
 bool oled_task_user(void) {
-    // Host Keyboard Layer Status
-    oled_write_P(PSTR("Layer: "), false);
+    if (!is_keyboard_master()) {
+        oled_write_P(PSTR("slave"), false);
+        return false;
+
+    }
 
     switch (get_highest_layer(layer_state)) {
         case _MAIN:
@@ -120,29 +128,40 @@ bool oled_task_user(void) {
         case _MEDIA:
             oled_write_P(PSTR("media\n"), false);
             break;
-
+        case _NUMPAD:
+            oled_write_P(PSTR("nmpad\n"), false);
+            break;
         default:
             // Or use the write_ln shortcut over adding '\n' to the end of your string
             oled_write_ln_P(PSTR("xxx"), false);
+            break;
     }
 
     // Host Keyboard LED Status
     led_t led_state = host_keyboard_led_state();
-    oled_write_P(led_state.caps_lock ? PSTR("CAP ") : PSTR("    "), false);
+    if (led_state.caps_lock) {
+        oled_write_P(PSTR("CAPS\n"), false);
+    }
     return false;
 }
 #endif
 
+layer_state_t layer_state_set_user(layer_state_t state) {
+    state = update_tri_layer_state(state, _NUM_NAV, _SYM, _MEDIA);
+    state = update_tri_layer_state(state, _OSM_MOUSE_NAV, _SYM, _NUMPAD);
+    return state;
+}
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_MAIN] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-     XXXXXXX,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,  KC_LBRC,
+     QK_BOOT,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,  KC_LBRC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
      XXXXXXX,    HOME_A, HOME_S,   HOME_D,  HOME_F,  KC_G,                         KC_H,  HOME_J,  HOME_K,  HOME_L, HOME_SCLN, KC_QUOT,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
      XXXXXXX,    KC_Z,    KC_X,   KC_C,    KC_V,     KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH,  KC_RBRC,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                  XXXXXXX,   MO(_NUM_NAV), LAYER_SPC,     KC_ENT,   MO(_SYM), XXXXXXX
+                                  MO(_OSM_MOUSE_NAV),   MO(_NUM_NAV), KC_SPC,     KC_ENT,   MO(_SYM), XXXXXXX
                                       //`--------------------------'  `--------------------------'
 
   ),
@@ -155,7 +174,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       XXXXXXX, KC_CAPS, KC_PGUP, KC_PGDN, KC_ESC, XXXXXXX,                     KC_HOME,  KC_ESC, XXXXXXX, KC_END,   KC_DEL,  XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          XXXXXXX, _______,  KC_SPC,     _______,   MO(_MEDIA), XXXXXXX
+                                          _______, _______,  _______,     _______,   _______, _______
                                       //`--------------------------'  `--------------------------'
   ),
 
@@ -167,7 +186,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      MS_WHLL, MS_WHLD, MS_WHLU, MS_WHLR, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                        XXXXXXX, XXXXXXX, _______,     _______, XXXXXXX, XXXXXXX
+                                        _______, _______, _______,     _______, _______, _______
                                       //`--------------------------'  `--------------------------'
   ),
 
@@ -179,7 +198,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE, KC_TILD,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                        XXXXXXX, MO(_MEDIA), KC_SPC,     _______, _______, XXXXXXX
+                                        _______, _______, _______,     _______, _______, _______
                                       //`--------------------------'  `--------------------------'
   ),
 
@@ -191,7 +210,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       RGB_SAD, RGB_VAD, RGB_HUD, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_MPRV, KC_MPLY, KC_MNXT, XXXXXXX, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          XXXXXXX, _______,  KC_SPC,     _______, _______, XXXXXXX
+                                          _______, _______,  _______,     _______, _______, _______
+                                      //`--------------------------'  `--------------------------'
+  ),
+
+      [_NUMPAD] = LAYOUT_split_3x6_3(
+  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, KC_7, KC_8, KC_9, XXXXXXX, XXXXXXX,
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, KC_4, KC_5, KC_6, XXXXXXX, XXXXXXX,
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, KC_1, KC_2, KC_3, XXXXXXX, XXXXXXX,
+  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
+                                          _______, _______,  _______,     _______, _______, KC_0
                                       //`--------------------------'  `--------------------------'
   )
 };
