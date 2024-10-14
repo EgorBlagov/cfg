@@ -90,8 +90,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
 const uint16_t PROGMEM double_shift_combo[] = {HOME_F, HOME_J, COMBO_END};
 const uint16_t PROGMEM left_return_combo[] = {KC_E, KC_R, COMBO_END};
 const uint16_t PROGMEM right_return_combo[] = {KC_U, KC_I, COMBO_END};
-const uint16_t PROGMEM left_delete_combo[] = {KC_W, KC_E, COMBO_END};
+const uint16_t PROGMEM left_backspace_combo[] = {KC_W, KC_E, COMBO_END};
 const uint16_t PROGMEM right_backspace_combo[] = {KC_I, KC_O, COMBO_END};
+const uint16_t PROGMEM left_delete_combo[] = {KC_Q, KC_W, COMBO_END};
+const uint16_t PROGMEM right_delete_combo[] = {KC_O, KC_P, COMBO_END};
 const uint16_t PROGMEM left_escape_combo[] = {KC_C, KC_V, COMBO_END};
 const uint16_t PROGMEM right_escape_combo[] = {KC_M, KC_COMM, COMBO_END};
 
@@ -100,11 +102,12 @@ combo_t key_combos[] = {
     COMBO(double_shift_combo, KC_CAPS_LOCK),
     COMBO(left_return_combo, KC_ENT),
     COMBO(right_return_combo, KC_ENT),
-    COMBO(left_delete_combo, KC_DEL),
+    COMBO(left_backspace_combo, KC_BSPC),
     COMBO(right_backspace_combo, KC_BSPC),
     COMBO(left_escape_combo, KC_ESC),
     COMBO(right_escape_combo, KC_ESC),
-
+    COMBO(left_delete_combo, KC_DEL),
+    COMBO(right_delete_combo, KC_DEL),
 };
 
 #endif
