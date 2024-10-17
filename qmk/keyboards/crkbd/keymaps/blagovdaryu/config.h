@@ -23,10 +23,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define USE_MATRIX_I2C
 
 // #define QUICK_TAP_TERM 0
+#define QUICK_TAP_TERM_PER_KEY
+#define QUICK_TAP_TERM 0
 #define ONESHOT_TAP_TOGGLE 2
 #define ONESHOT_TIMEOUT 3000  /* Time (in ms) before the one shot key is released */
 
-#define TAPPING_TERM 175
+#define TAPPING_TERM 200
 #define PERMISSIVE_HOLD
 
 
@@ -41,7 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SPLIT_LAYER_STATE_ENABLE
 #define SPLIT_LED_STATE_ENABLE
 // #define ACTION_DEBUG
-#define TAP_CODE_DELAY 50
+#define TAP_CODE_DELAY 50 // for caps lock macro
 
 #ifdef RGB_MATRIX_ENABLE
     #define RGB_MATRIX_KEYPRESSES // reacts to keypresses

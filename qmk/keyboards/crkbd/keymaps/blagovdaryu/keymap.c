@@ -191,6 +191,8 @@ bool oled_task_user(void) {
     led_t led_state = host_keyboard_led_state();
     if (led_state.caps_lock) {
         oled_write_P(PSTR("CAPS\n"), false);
+    } else {
+        oled_write_P(PSTR("\n"), false);
     }
     return false;
 }
@@ -210,6 +212,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 // }
 /*
 todo
+quick tap term for layer OSM must work, but for home row mods -- shouldn't
 ss_lang delay for macos +
     mb nav to make OSL? hold - can use enter
         solved (we can use combo)
@@ -230,6 +233,13 @@ tab move up and move numbers to numpad layer
     maybe will be needed for oneshot mods, but do I realy need that?
 */
 
+uint16_t get_quick_tap_term(uint16_t keycode, keyrecord_t *record) {
+    if (get_highest_layer(layer_state) == _OSM_MOUSE_NAV) {
+        return 100;
+    }
+
+    return 0;
+}
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_MAIN] = LAYOUT_split_3x6_3(
