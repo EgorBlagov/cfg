@@ -245,18 +245,18 @@
   :result-transform :sort-by-deadline-and-priority
   :collapsed? false}
 
-   {:title [:h1 "🔥 Overdue"]
+ {:title [:h1 "🔥 Overdue"]
     :query [:find (pull ?b [*])
-            :in $ ?today ?next
+            :in $ ?today
             :where
             [?b :block/marker ?marker]
             [(contains? #{"TODO"} ?marker)]
             (or
              [?b :block/scheduled ?day]
              [?b :block/deadline ?day])
-            [(>= ?day ?today)]
-            [(<= ?day ?next)]]
-    :inputs [:14d :1d]
+            [(< ?day ?today)]
+            ]
+    :inputs [:today]
     :group-by-page? false
     :result-transform :sort-by-schedule-and-priority
 
